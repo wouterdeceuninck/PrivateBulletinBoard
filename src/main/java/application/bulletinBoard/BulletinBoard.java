@@ -1,10 +1,8 @@
-package bulletinBoard.collection;
+package application.bulletinBoard;
 
-import bulletinBoard.cell.Cell;
-import bulletinBoard.exceptions.NoSuchCellException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import security.utils.HashFunction;
+import application.bulletinBoard.cell.Cell;
+import application.exceptions.NoSuchCellException;
+import presentation.security.HashFunction;
 
 import java.util.AbstractMap.SimpleEntry;
 import java.util.Map;
@@ -13,8 +11,8 @@ import java.util.stream.Collectors;
 
 import static java.util.stream.IntStream.range;
 
-public class BulletinBoard implements BulletinBoardInterface {
-    private Map<Integer, Cell> cellCollection;
+public class BulletinBoard {
+    private final Map<Integer, Cell> cellCollection;
 
     public BulletinBoard(int amount, HashFunction hashFunction) {
         cellCollection = range(0, amount)
@@ -26,13 +24,11 @@ public class BulletinBoard implements BulletinBoardInterface {
         return new SimpleEntry<>(cellNumber, new Cell(hashFunction));
     }
 
-    @Override
     public void add(int cell, String tag, String value) {
         Cell selectedCell = getSelectedCell(cell);
         selectedCell.putMessage(tag, value);
     }
 
-    @Override
     public String get(int cell, String tag) {
         Cell selectedCell = getSelectedCell(cell);
         return selectedCell.getMessage(tag);

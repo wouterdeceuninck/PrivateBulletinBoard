@@ -1,13 +1,14 @@
-package bulletinBoard.collection;
+package application.bulletinBoard;
 
-import bulletinBoard.exceptions.NoSuchCellException;
+import application.exceptions.NoSuchCellException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import security.utils.HashFunction;
+import presentation.security.HashFunction;
 
 public class ExceptionHandlingBulletinBoard extends BulletinBoard {
-    private Logger logger = LoggerFactory.getLogger(ExceptionHandlingBulletinBoard.class);
+    private final Logger logger = LoggerFactory.getLogger(ExceptionHandlingBulletinBoard.class);
 
+    @SuppressWarnings("WeakerAccess")
     public ExceptionHandlingBulletinBoard(int amount, HashFunction hashFunction) {
         super(amount, hashFunction);
     }

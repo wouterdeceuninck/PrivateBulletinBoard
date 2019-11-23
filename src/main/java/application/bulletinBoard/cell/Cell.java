@@ -1,13 +1,13 @@
-package bulletinBoard.cell;
+package application.bulletinBoard.cell;
 
-import security.utils.HashFunction;
+import presentation.security.HashFunction;
 
 import java.util.HashMap;
 import java.util.Map;
 
 public class Cell {
     private final HashFunction hashFunction;
-    private Map<String, String> messages;
+    private final Map<String, String> messages;
 
     public Cell(HashFunction hashFunction) {
         messages = new HashMap<>();
@@ -15,7 +15,7 @@ public class Cell {
     }
 
     public String getMessage(String key) {
-        String hashedKey = hashFunction.hashStringSHA256(key);
+        String hashedKey = hashFunction.hashString(key);
         String message = messages.remove(hashedKey);
         return message == null ? "" : message;
     }

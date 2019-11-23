@@ -1,4 +1,4 @@
-package bulletinBoard.exceptions;
+package application.exceptions;
 
 public class NoSuchCellException extends RuntimeException {
     public NoSuchCellException(String message) {
