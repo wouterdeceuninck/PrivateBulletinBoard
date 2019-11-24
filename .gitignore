@@ -1,4 +1,5 @@
-/target/
+/BulletinBoard/target/
 /.idea/
 
 /PrivateBulletinBoard.iml
+/Client/target/
