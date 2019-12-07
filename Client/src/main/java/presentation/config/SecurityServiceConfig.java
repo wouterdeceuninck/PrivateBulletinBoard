@@ -6,6 +6,7 @@ import application.messaging.forward.SecureGenerator;
 import application.messaging.requests.RequestService;
 import application.security.SecurityService;
 import application.security.encryption.EncryptionService;
+import application.security.forward.ForwardKeyGenerator;
 import application.security.keys.KeyService;
 import application.security.utils.KeyStoreUtil;
 import application.users.UserService;
@@ -21,6 +22,7 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.util.HashMap;
+import java.util.Random;
 
 @Configuration
 public class SecurityServiceConfig {
@@ -38,11 +40,22 @@ public class SecurityServiceConfig {
     }
 
     @Bean
+    SecureRandom secureRandom() {
+        return new SecureRandom();
+    }
+
+    @Bean
+    ForwardKeyGenerator forwardKeyGenerator() {
+        return new ForwardKeyGenerator(new Random());
+    }
+
+    @Bean
     SecurityService securityService(KeyService keyService,
                                     EncryptionService encryptionService,
                                     HashFunction hashFunction,
-                                    SecureGenerator secureGenerator) {
-        return new SecurityService(keyService, encryptionService, hashFunction, secureGenerator);
+                                    SecureGenerator secureGenerator,
+                                    ForwardKeyGenerator forwardKeyGenerator) {
+        return new SecurityService(keyService, encryptionService, hashFunction, secureGenerator, forwardKeyGenerator);
     }
 
     @Bean

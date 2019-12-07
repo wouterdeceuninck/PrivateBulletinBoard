@@ -34,18 +34,22 @@ class MessageService {
         bulletinBoard.postMessage(postRequest);
 
         UserDto userDto = new UserDto(sendUser.getKeyName(), nextCellIndex, nextTag);
+
         userService.updateSendUser(receiver, userDto);
+        securityService.updateSecurityKey(sendUser.getKeyName());
     }
 
     String getMessage(String receiver) {
-
         UserDto receiveUser = userService.getReceiveUser(receiver);
         String getRequest = requestService.createGetRequest(receiveUser);
         String encryptMessage = bulletinBoard.getMessage(getRequest);
 
         String message = securityService.decryptMessage(encryptMessage, receiveUser.getKeyName());
         ForwardMessage forwardMessage = readValue(message);
+
         userService.updateReceiveUser(receiver, new UserDto(receiveUser.getKeyName(), forwardMessage.getNextIndex(), forwardMessage.getNextTag()));
+        securityService.updateSecurityKey(receiveUser.getKeyName());
+
         return message;
     }
 
