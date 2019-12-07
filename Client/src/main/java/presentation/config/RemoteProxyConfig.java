@@ -3,18 +3,22 @@ package presentation.config;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.remoting.rmi.RmiProxyFactoryBean;
-import presentation.port.BulletinBoardInterface;
+import shared.BulletinBoardInterface;
 
 @Configuration
 public class RemoteProxyConfig {
 
+    private String rmiLocationUrl = "rmi://localhost:1099/BulletinBoardService";
+
     @Bean
-    RmiProxyFactoryBean service() {
-        RmiProxyFactoryBean rmiProxyFactory = new RmiProxyFactoryBean();
-        rmiProxyFactory.setServiceUrl("rmi://localhost:1099/BulletinBoardService");
-        rmiProxyFactory.setServiceInterface(BulletinBoardInterface.class);
-        return rmiProxyFactory;
+    BulletinBoardInterface service() {
+        RmiProxyFactoryBean rmiProxyFactoryBean = new RmiProxyFactoryBean();
+        rmiProxyFactoryBean.setServiceUrl(rmiLocationUrl);
+        rmiProxyFactoryBean.setServiceInterface(BulletinBoardInterface.class);
+        rmiProxyFactoryBean.setCacheStub(true);
+        rmiProxyFactoryBean.setLookupStubOnStartup(true);
+        rmiProxyFactoryBean.setRefreshStubOnConnectFailure(true);
+        rmiProxyFactoryBean.afterPropertiesSet();
+        return (BulletinBoardInterface) rmiProxyFactoryBean.getObject();
     }
-
-
 }

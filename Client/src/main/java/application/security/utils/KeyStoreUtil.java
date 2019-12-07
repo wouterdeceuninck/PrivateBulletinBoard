@@ -8,10 +8,10 @@ import java.security.KeyStoreException;
 
 public class KeyStoreUtil {
 
-    public static final String pathname = "C:\\Users\\wouter\\IdeaProjects\\PrivateBulletinBoard\\Client\\src\\main\\resources\\userKeyStore.jceks";
+    public static final String pathname = "C:\\Users\\wouter\\IdeaProjects\\PrivateBulletinBoard\\Client\\src\\main\\resources\\";
 
-    public static KeyStore getKeyStore() {
-        File file = new File(pathname);
+    public static KeyStore getKeyStore(String keystoreName) {
+        File file = new File(pathname + keystoreName);
         KeyStore keyStore = getJceksInstance();
         if (file.exists()) {
             loadFile(file, keyStore);

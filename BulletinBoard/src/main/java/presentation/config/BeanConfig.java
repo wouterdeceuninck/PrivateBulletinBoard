@@ -15,8 +15,6 @@ import java.security.NoSuchAlgorithmException;
 @Configuration
 public class BeanConfig {
 
-    private int boardSize = 20;
-
     @Bean
     public HashFunction getHashFunction() throws NoSuchAlgorithmException {
         return new HashFunctionImpl(MessageDigest.getInstance("sha-256"));
@@ -32,8 +30,4 @@ public class BeanConfig {
         return new ObjectMapper();
     }
 
-    @Bean
-    public BulletinBoardInterface createBulletinController(HashFunction hashFunction, DecryptService decryptService) {
-        return new BulletinBoardController(boardSize, hashFunction, decryptService);
-    }
 }
