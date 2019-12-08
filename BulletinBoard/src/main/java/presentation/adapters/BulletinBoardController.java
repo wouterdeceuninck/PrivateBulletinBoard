@@ -1,52 +1,31 @@
 package presentation.adapters;
 
-import application.bulletinBoard.ExceptionHandlingBulletinBoard;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import presentation.ports.BulletinBoardInterface;
-import presentation.security.DecryptService;
-import presentation.security.HashFunction;
-import presentation.security.dto.GetMessageRequestDTO;
-import presentation.security.dto.PostMessageRequestDTO;
+import application.bulletinBoard.BulletinBoard;
+import shared.BulletinBoardInterface;
+import shared.GetMessageRequestDTO;
+import shared.PostMessageRequestDTO;
+
+import static shared.utils.DefaultObjectMapper.mapToObject;
 
 public class BulletinBoardController implements BulletinBoardInterface {
 
-    private ExceptionHandlingBulletinBoard bulletinBoard;
-    private DecryptService decryptService;
+    private BulletinBoard bulletinBoard;
 
-    public BulletinBoardController(int cellSize, HashFunction hashFunction, DecryptService service) {
-        this.bulletinBoard = new ExceptionHandlingBulletinBoard(cellSize, hashFunction);
-        decryptService = service;
+    public BulletinBoardController(BulletinBoard bulletinBoard) {
+        this.bulletinBoard = bulletinBoard;
     }
 
     @Override
     public String getMessage(String request) {
-        GetMessageRequestDTO getMessageRequestDTO = decryptGetMessage(request);
+        GetMessageRequestDTO getMessageRequestDTO = mapToObject(GetMessageRequestDTO.class, request);
         return getMessageRequestDTO == null ? "" :
                 bulletinBoard.get(getMessageRequestDTO.getCell(), getMessageRequestDTO.getTag());
     }
 
     @Override
     public void postMessage(String request) {
-        PostMessageRequestDTO postMessageRequestDTO = decryptPostMessage(request);
+        PostMessageRequestDTO postMessageRequestDTO = mapToObject(PostMessageRequestDTO.class, request);
         if (postMessageRequestDTO == null) return;
         bulletinBoard.add(postMessageRequestDTO.getCell(), postMessageRequestDTO.getTag(), postMessageRequestDTO.getMessage());
-    }
-
-    private PostMessageRequestDTO decryptPostMessage(String request) {
-        try {
-            return decryptService.decryptPostMessageRequest(request);
-        } catch (JsonProcessingException e) {
-            e.printStackTrace();
-            return null;
-        }
-    }
-
-    private GetMessageRequestDTO decryptGetMessage(String request) {
-        try {
-            return decryptService.decryptGetMessageRequest(request);
-        } catch (JsonProcessingException e) {
-            e.printStackTrace();
-            return null;
-        }
     }
 }

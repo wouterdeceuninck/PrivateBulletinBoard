@@ -1,12 +1,12 @@
 package presentation.config;
 
+import application.bulletinBoard.ExceptionHandlingBulletinBoard;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.remoting.rmi.RmiServiceExporter;
 import presentation.adapters.BulletinBoardController;
-import presentation.ports.BulletinBoardInterface;
-import presentation.security.DecryptService;
-import presentation.security.HashFunction;
+import shared.BulletinBoardInterface;
+import shared.HashFunction;
 
 @Configuration
 public class RemoteConfig {
@@ -14,8 +14,8 @@ public class RemoteConfig {
     private int boardSize = 20;
 
     @Bean
-    public BulletinBoardController createBulletinController(HashFunction hashFunction, DecryptService decryptService) {
-        return new BulletinBoardController(boardSize, hashFunction, decryptService);
+    public BulletinBoardController createBulletinController(HashFunction hashFunction) {
+        return new BulletinBoardController(new ExceptionHandlingBulletinBoard(boardSize, hashFunction));
     }
 
     @Bean

@@ -1,7 +1,6 @@
 package presentation.config;
 
 
-import application.messaging.ForwardTagAndCellService;
 import application.messaging.forward.SecureGenerator;
 import application.messaging.requests.RequestService;
 import application.security.SecurityService;
@@ -53,9 +52,8 @@ public class SecurityServiceConfig {
     SecurityService securityService(KeyService keyService,
                                     EncryptionService encryptionService,
                                     HashFunction hashFunction,
-                                    SecureGenerator secureGenerator,
-                                    ForwardKeyGenerator forwardKeyGenerator) {
-        return new SecurityService(keyService, encryptionService, hashFunction, secureGenerator, forwardKeyGenerator);
+                                    SecureGenerator secureGenerator) {
+        return new SecurityService(keyService, encryptionService, hashFunction, secureGenerator);
     }
 
     @Bean
@@ -64,13 +62,8 @@ public class SecurityServiceConfig {
     }
 
     @Bean
-    SecureGenerator cellIndexGenerator() {
-        return new SecureGenerator(new SecureRandom());
-    }
-
-    @Bean
-    ForwardTagAndCellService forwardTagAndCellService(SecureGenerator secureGenerator, ObjectMapper objectMapper) {
-        return new ForwardTagAndCellService(secureGenerator, objectMapper);
+    SecureGenerator cellIndexGenerator(ForwardKeyGenerator forwardKeyGenerator) {
+        return new SecureGenerator(new SecureRandom(), forwardKeyGenerator);
     }
 
     @Bean
@@ -84,9 +77,7 @@ public class SecurityServiceConfig {
     }
 
     @Bean
-    RequestService requestService(ObjectMapper objectMapper,
-                                  ForwardTagAndCellService forwardTagAndCellService,
-                                  SecurityService securityService) {
-        return new RequestService(objectMapper, forwardTagAndCellService, securityService);
+    RequestService requestService(SecurityService securityService) {
+        return new RequestService(securityService);
     }
 }

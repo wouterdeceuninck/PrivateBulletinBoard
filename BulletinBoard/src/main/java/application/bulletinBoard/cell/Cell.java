@@ -1,6 +1,6 @@
 package application.bulletinBoard.cell;
 
-import presentation.security.HashFunction;
+import shared.HashFunction;
 
 import java.util.HashMap;
 import java.util.Map;

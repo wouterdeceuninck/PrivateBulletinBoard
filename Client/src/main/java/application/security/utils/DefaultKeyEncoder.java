@@ -12,6 +12,10 @@ public class DefaultKeyEncoder {
 
     public static SecretKey decodeToSecretKey(String base64EncodedKey) {
         byte[] keyBytes = DefaultByteEncoder.decodeFromBase64(base64EncodedKey);
-        return new SecretKeySpec(keyBytes, 0, 16, "AES");
+        return toSecretKey(keyBytes);
+    }
+
+    public static SecretKey toSecretKey(byte[] array) {
+        return new SecretKeySpec(array, 0, 16, "AES");
     }
 }

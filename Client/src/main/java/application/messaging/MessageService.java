@@ -5,9 +5,9 @@ import application.messaging.requests.RequestService;
 import application.security.SecurityService;
 import application.users.UserService;
 import application.users.dto.UserDto;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import shared.BulletinBoardInterface;
+
+import static shared.utils.DefaultObjectMapper.mapToObject;
 
 class MessageService {
     private final SecurityService securityService;
@@ -30,36 +30,38 @@ class MessageService {
         String nextTag = securityService.generateTag();
         UserDto sendUser = userService.getSendUser(receiver);
 
-        String postRequest = requestService.createPostRequest(sendUser, message, nextCellIndex, nextTag);
-        bulletinBoard.postMessage(postRequest);
-
-        UserDto userDto = new UserDto(sendUser.getKeyName(), nextCellIndex, nextTag);
-
-        userService.updateSendUser(receiver, userDto);
-        securityService.updateSecurityKey(sendUser.getKeyName());
+        postMessageToBulletinBoard(message, nextCellIndex, nextTag, sendUser);
+        updateSenderState(receiver, nextCellIndex, nextTag, sendUser);
     }
 
     String getMessage(String receiver) {
         UserDto receiveUser = userService.getReceiveUser(receiver);
-        String getRequest = requestService.createGetRequest(receiveUser);
-        String encryptMessage = bulletinBoard.getMessage(getRequest);
-
+        String encryptMessage = getMessageFromBulletinBoard(receiveUser);
         String message = securityService.decryptMessage(encryptMessage, receiveUser.getKeyName());
-        ForwardMessage forwardMessage = readValue(message);
 
-        userService.updateReceiveUser(receiver, new UserDto(receiveUser.getKeyName(), forwardMessage.getNextIndex(), forwardMessage.getNextTag()));
-        securityService.updateSecurityKey(receiveUser.getKeyName());
-
+        updateReceiverState(receiver, receiveUser, mapToObject(ForwardMessage.class, message));
         return message;
     }
 
-    private ForwardMessage readValue(String message) {
-        ObjectMapper objectMapper = new ObjectMapper();
-        try {
-            return objectMapper.readValue(message, ForwardMessage.class);
-        } catch (JsonProcessingException e) {
-            e.printStackTrace();
-            throw new RuntimeException();
-        }
+    private void postMessageToBulletinBoard(String message, int nextCellIndex, String nextTag, UserDto sendUser) {
+        String postRequest = requestService.createPostRequest(sendUser, message, nextCellIndex, nextTag);
+        bulletinBoard.postMessage(postRequest);
+    }
+
+    private void updateSenderState(String receiver, int nextCellIndex, String nextTag, UserDto sendUser) {
+        UserDto userDto = new UserDto(sendUser.getKeyName(), nextCellIndex, nextTag);
+        userService.updateSendUser(receiver, userDto);
+        securityService.updateSecurityKey(sendUser.getKeyName());
+    }
+
+    private String getMessageFromBulletinBoard(UserDto receiveUser) {
+        String getRequest = requestService.createGetRequest(receiveUser);
+        return bulletinBoard.getMessage(getRequest);
+    }
+
+    private void updateReceiverState(String receiver, UserDto receiveUser, ForwardMessage forwardMessage) {
+        UserDto userDto = new UserDto(receiveUser.getKeyName(), forwardMessage.getNextIndex(), forwardMessage.getNextTag());
+        userService.updateReceiveUser(receiver, userDto);
+        securityService.updateSecurityKey(receiveUser.getKeyName());
     }
 }

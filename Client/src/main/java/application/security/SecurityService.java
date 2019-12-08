@@ -2,7 +2,6 @@ package application.security;
 
 import application.messaging.forward.SecureGenerator;
 import application.security.encryption.EncryptionService;
-import application.security.forward.ForwardKeyGenerator;
 import application.security.keys.KeyService;
 import application.security.utils.DefaultByteEncoder;
 import application.security.utils.DefaultKeyEncoder;
@@ -17,18 +16,15 @@ public class SecurityService {
     private final EncryptionService encryptionService;
     private final HashFunction hashFunction;
     private final SecureGenerator secureGenerator;
-    private final ForwardKeyGenerator forwardKeyGenerator;
 
     public SecurityService(KeyService keyService,
                            EncryptionService encryptionService,
                            HashFunction hashFunction,
-                           SecureGenerator secureGenerator,
-                           ForwardKeyGenerator forwardKeyGenerator) {
+                           SecureGenerator secureGenerator) {
         this.keyService = keyService;
         this.encryptionService = encryptionService;
         this.hashFunction = hashFunction;
         this.secureGenerator = secureGenerator;
-        this.forwardKeyGenerator = forwardKeyGenerator;
     }
 
     public String encryptMessage(String message, String keyName) {
@@ -65,7 +61,7 @@ public class SecurityService {
 
     public void updateSecurityKey(String keyName) {
         SecretKey key = keyService.getKey(keyName);
-        Key forwardKey = forwardKeyGenerator.generateNextKey(key);
+        Key forwardKey = secureGenerator.generateNextKey(key);
         keyService.addKey(keyName, (SecretKey) forwardKey);
     }
 }

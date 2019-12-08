@@ -1,6 +1,5 @@
 package application.security.keys;
 
-import application.security.utils.DefaultByteEncoder;
 import application.security.utils.KeyStoreUtil;
 import infrastructure.security.KeyStorage;
 import org.junit.jupiter.api.Assertions;

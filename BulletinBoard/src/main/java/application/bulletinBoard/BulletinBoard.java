@@ -2,7 +2,7 @@ package application.bulletinBoard;
 
 import application.bulletinBoard.cell.Cell;
 import application.exceptions.NoSuchCellException;
-import presentation.security.HashFunction;
+import shared.HashFunction;
 
 import java.util.AbstractMap.SimpleEntry;
 import java.util.Map;

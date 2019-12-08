@@ -4,7 +4,7 @@ import application.bulletinBoard.cell.Cell;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import presentation.security.HashFunctionImpl;
+import shared.HashFunctionImpl;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -45,6 +45,4 @@ class CellTest {
         Assertions.assertEquals("", cell.getMessage("key1"));
         Assertions.assertEquals(value, cell.getMessage(key));
     }
-
-
 }

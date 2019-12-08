@@ -11,7 +11,6 @@ public class HashFunctionImpl implements HashFunction {
         this.messageDigest = messageDigest;
     }
 
-    @Override
     public String hashString(String message) {
         byte[] digest = digestMessage(message);
         return Hex.encodeHexString(digest);

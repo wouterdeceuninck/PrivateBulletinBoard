@@ -3,9 +3,10 @@ package application.security.forward;
 import com.google.common.primitives.Longs;
 
 import javax.crypto.SecretKey;
-import javax.crypto.spec.SecretKeySpec;
 import java.security.Key;
 import java.util.Random;
+
+import static application.security.utils.DefaultKeyEncoder.toSecretKey;
 
 public class ForwardKeyGenerator {
 
@@ -21,6 +22,6 @@ public class ForwardKeyGenerator {
 
         random.setSeed(Longs.fromByteArray(encoded));
         random.nextBytes(bytes);
-        return new SecretKeySpec(bytes, 0, 16, "AES");
+        return toSecretKey(bytes);
     }
 }

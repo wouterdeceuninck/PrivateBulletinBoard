@@ -4,7 +4,7 @@ import application.exceptions.NoSuchCellException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import presentation.security.HashFunctionImpl;
+import shared.HashFunctionImpl;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
