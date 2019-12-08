@@ -1,5 +1,11 @@
 /BulletinBoard/target/
 /.idea/
 
-/PrivateBulletinBoard.iml
 /Client/target/
+
+/shared/target/
+/PrivateBulletinBoard.iml
+/shared.iml
+/Client/Client.iml
+/BulletinBoard/PrivateBulletinBoard.iml
+/shared/shared.iml
