@@ -7,7 +7,7 @@ import application.security.SecurityService;
 import application.security.encryption.EncryptionService;
 import application.security.forward.ForwardKeyGenerator;
 import application.security.keys.KeyService;
-import application.security.utils.KeyStoreUtil;
+import shared.utils.KeyStoreUtil;
 import application.users.UserService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import infrastructure.security.KeyStorage;
@@ -26,21 +26,19 @@ import java.util.Random;
 @Configuration
 public class SecurityServiceConfig {
 
+    private String keystoreName = "userKeyStore.jceks";
+
+    private String cipherName = "AES";
     @Bean
     EncryptionService encryptionService() {
-        return new EncryptionService();
+        return new EncryptionService(cipherName);
     }
 
     @Bean
     KeyService keyService() {
-        KeyStore keyStore = KeyStoreUtil.getKeyStore("userKeyStore.jceks");
+        KeyStore keyStore = KeyStoreUtil.getKeyStore(keystoreName);
         KeyStorage keyStorage = new KeyStorage(keyStore);
         return new KeyService(keyStorage);
-    }
-
-    @Bean
-    SecureRandom secureRandom() {
-        return new SecureRandom();
     }
 
     @Bean

@@ -1,7 +1,7 @@
 package infrastructure.security;
 
 import application.exceptions.NoKeyFoundException;
-import application.security.utils.KeyStoreUtil;
+import shared.utils.KeyStoreUtil;
 
 import javax.crypto.SecretKey;
 import java.io.FileOutputStream;

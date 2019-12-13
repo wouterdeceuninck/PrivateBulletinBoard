@@ -1,7 +1,7 @@
 package application.security.keys;
 
 import application.exceptions.NoKeyFoundException;
-import application.security.utils.KeyStoreUtil;
+import shared.utils.KeyStoreUtil;
 import infrastructure.security.KeyStorage;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;

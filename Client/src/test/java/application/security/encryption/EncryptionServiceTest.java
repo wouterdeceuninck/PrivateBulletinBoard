@@ -11,13 +11,13 @@ class EncryptionServiceTest {
 
     @Test
     void encryptMessage() {
-        EncryptionService encryptionService = new EncryptionService();
+        EncryptionService encryptionService = new EncryptionService("AES");
         encryptionService.encryptMessage("message", decodeStringToKey("+L9SeEdYDVSLokj/+U2LVQ=="));
     }
 
     @Test
     void encryptAndDecrypt() {
-        EncryptionService encryptionService = new EncryptionService();
+        EncryptionService encryptionService = new EncryptionService("AES");
         SecretKey key = decodeStringToKey("qUm2zXQ1MFXOdeOXduM71RbSBI/lB6nUZKPhwBzUq5w=");
 
         String message = encryptionService.encryptMessage("message", key);

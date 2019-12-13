@@ -1,4 +1,4 @@
-package application.security.utils;
+package shared.utils;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -8,7 +8,7 @@ import java.security.KeyStoreException;
 
 public class KeyStoreUtil {
 
-    public static final String pathname = "C:\\Users\\wouter\\IdeaProjects\\PrivateBulletinBoard\\Client\\src\\main\\resources\\";
+    public static final String pathname = "";
 
     public static KeyStore getKeyStore(String keystoreName) {
         File file = new File(pathname + keystoreName);

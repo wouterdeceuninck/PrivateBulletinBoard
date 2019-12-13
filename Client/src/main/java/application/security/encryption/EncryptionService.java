@@ -7,6 +7,12 @@ import static application.security.utils.DefaultByteEncoder.*;
 
 public class EncryptionService {
 
+    private final String cipherName;
+
+    public EncryptionService(String cipherName) {
+        this.cipherName = cipherName;
+    }
+
     public String encryptMessage(String utf8EncodedMessage, SecretKey key) {
         try {
             byte[] encryptedMessage = executeCipher(decodeFromUTF8(utf8EncodedMessage), key, Cipher.ENCRYPT_MODE);
@@ -28,7 +34,7 @@ public class EncryptionService {
     }
 
     private byte[] executeCipher(byte[] message, SecretKey key, int encryptMode) throws Exception {
-        Cipher cipher = Cipher.getInstance("AES");
+        Cipher cipher = Cipher.getInstance(cipherName);
         cipher.init(encryptMode, key);
         return cipher.doFinal(message);
     }
