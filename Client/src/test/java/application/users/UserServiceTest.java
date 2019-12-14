@@ -4,12 +4,18 @@ import application.exceptions.NoSuchUserException;
 import application.users.dto.UserDto;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+import shared.HashFunctionImpl;
 
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.HashMap;
 
 class UserServiceTest {
 
-    private UserService userService = new UserService(new HashMap<>(), new HashMap<>());
+    private UserService userService = new UserService(new HashMap<>(), new HashMap<>(), new HashFunctionImpl(MessageDigest.getInstance("sha-256")));
+
+    UserServiceTest() throws NoSuchAlgorithmException {
+    }
 
     @Test
     void getNotExistingUser() {

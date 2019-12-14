@@ -7,6 +7,7 @@ import application.security.SecurityService;
 import application.security.encryption.EncryptionService;
 import application.security.forward.ForwardKeyGenerator;
 import application.security.keys.KeyService;
+import application.security.ticket.TicketSolver;
 import shared.utils.KeyStoreUtil;
 import application.users.UserService;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -24,7 +25,7 @@ import java.util.HashMap;
 import java.util.Random;
 
 @Configuration
-public class SecurityServiceConfig {
+public class BeanConfig {
 
     private String keystoreName = "userKeyStore.jceks";
 
@@ -65,8 +66,8 @@ public class SecurityServiceConfig {
     }
 
     @Bean
-    UserService userService() {
-        return new UserService(new HashMap<>(), new HashMap<>());
+    UserService userService(HashFunction hashFunction) {
+        return new UserService(new HashMap<>(), new HashMap<>(), hashFunction);
     }
 
     @Bean
@@ -77,5 +78,10 @@ public class SecurityServiceConfig {
     @Bean
     RequestService requestService(SecurityService securityService) {
         return new RequestService(securityService);
+    }
+
+    @Bean
+    TicketSolver createTicketSolver(HashFunction hashFunction) {
+        return new TicketSolver(hashFunction);
     }
 }

@@ -11,6 +11,7 @@ public class DefaultObjectMapper {
         try {
             return objectMapper.readValue(jsonObject, t);
         } catch (JsonProcessingException e) {
+            e.printStackTrace();
             throw new UnexpectedMappingException("Could not map json to Object");
         }
     }

@@ -1,9 +1,12 @@
 package shared;
 
+import shared.ticket.TicketSolution;
+
 public class PostMessageRequestDTO {
     private int cell;
     private String tag;
     private String message;
+    private TicketSolution solvedTicket;
 
     public PostMessageRequestDTO() {
     }
@@ -24,5 +27,13 @@ public class PostMessageRequestDTO {
 
     public String getMessage() {
         return message;
+    }
+
+    public TicketSolution getSolvedTicket() {
+        return solvedTicket;
+    }
+
+    public void setSolution(TicketSolution solution) {
+        this.solvedTicket = solution;
     }
 }

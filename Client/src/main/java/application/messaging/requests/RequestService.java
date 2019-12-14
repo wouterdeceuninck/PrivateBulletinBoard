@@ -14,17 +14,15 @@ public class RequestService {
         this.securityService = securityService;
     }
 
-    public String createPostRequest(UserDto userDto, String message, int nextIndex, String nextTag) {
+    public PostMessageRequestDTO createPostRequest(UserDto userDto, String message, int nextIndex, String nextTag) {
         String forwardMessage = mapToString(new ForwardMessage(nextIndex, nextTag, message));
         String hashTag = securityService.hashString(userDto.getTag());
         String encryptMessage = securityService.encryptMessage(forwardMessage, userDto.getKeyName());
 
-        PostMessageRequestDTO postRequest = new PostMessageRequestDTO(userDto.getCell(), hashTag, encryptMessage);
-        return mapToString(postRequest);
+        return new PostMessageRequestDTO(userDto.getCell(), hashTag, encryptMessage);
     }
 
-    public String createGetRequest(UserDto userDto) {
-        GetMessageRequestDTO getRequest = new GetMessageRequestDTO(userDto.getCell(), userDto.getTag());
-        return mapToString(getRequest);
+    public GetMessageRequestDTO createGetRequest(UserDto userDto) {
+        return new GetMessageRequestDTO(userDto.getCell(), userDto.getTag());
     }
 }

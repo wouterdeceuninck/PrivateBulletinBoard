@@ -4,26 +4,25 @@ import application.messaging.requests.ForwardMessage;
 import application.messaging.requests.RequestService;
 import application.security.SecurityService;
 import application.security.keys.KeyService;
+import application.security.ticket.TicketSolver;
 import application.security.utils.DefaultKeyEncoder;
 import application.users.UserService;
 import application.users.dto.UserDto;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import presentation.config.RemoteProxyConfig;
-import presentation.config.SecurityServiceConfig;
+import presentation.config.BeanConfig;
 import shared.BulletinBoardInterface;
 
 import static shared.utils.DefaultObjectMapper.mapToObject;
 
-@Disabled
 @ExtendWith(SpringExtension.class)
-@SpringBootTest(classes = {SecurityServiceConfig.class, RemoteProxyConfig.class})
+@SpringBootTest(classes = {BeanConfig.class, RemoteProxyConfig.class})
 class ITMessageServiceTest {
 
     @Autowired
@@ -41,11 +40,14 @@ class ITMessageServiceTest {
     @Autowired
     BulletinBoardInterface bulletinBoardInterface;
 
+    @Autowired
+    TicketSolver ticketSolver;
+
     private MessageService messageService;
 
     @BeforeEach
     void setUp() {
-        messageService = new MessageService(bulletinBoardInterface, requestService, securityService, userService);
+        messageService = new MessageService(bulletinBoardInterface, requestService, securityService, userService, ticketSolver);
     }
 
     @Test

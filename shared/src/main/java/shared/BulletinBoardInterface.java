@@ -4,5 +4,7 @@ public interface BulletinBoardInterface {
 
     String getMessage(String request);
 
-    void postMessage(String request);
+    boolean postMessage(String request);
+
+    String getTicket();
 }

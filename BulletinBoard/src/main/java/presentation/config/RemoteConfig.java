@@ -1,6 +1,7 @@
 package presentation.config;
 
 import application.bulletinBoard.ExceptionHandlingBulletinBoard;
+import application.security.ticket.TicketGrantingService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.remoting.rmi.RmiServiceExporter;
@@ -14,8 +15,8 @@ public class RemoteConfig {
     private int boardSize = 20;
 
     @Bean
-    public BulletinBoardController createBulletinController(HashFunction hashFunction) {
-        return new BulletinBoardController(new ExceptionHandlingBulletinBoard(boardSize, hashFunction));
+    public BulletinBoardController createBulletinController(HashFunction hashFunction, TicketGrantingService ticketGrantingService) {
+        return new BulletinBoardController(new ExceptionHandlingBulletinBoard(boardSize, hashFunction), ticketGrantingService);
     }
 
     @Bean

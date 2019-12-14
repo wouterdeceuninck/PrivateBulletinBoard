@@ -9,11 +9,11 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
-import presentation.config.SecurityServiceConfig;
+import presentation.config.BeanConfig;
 
 
 @ExtendWith(SpringExtension.class)
-@SpringBootTest(classes = SecurityServiceConfig.class)
+@SpringBootTest(classes = BeanConfig.class)
 class ITRequestServiceTest {
 
     @Autowired

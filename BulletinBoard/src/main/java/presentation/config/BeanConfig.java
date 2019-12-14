@@ -1,5 +1,6 @@
 package presentation.config;
 
+import application.security.ticket.TicketGrantingService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -8,6 +9,7 @@ import shared.HashFunctionImpl;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.security.SecureRandom;
 
 @Configuration
 public class BeanConfig {
@@ -22,4 +24,13 @@ public class BeanConfig {
         return new ObjectMapper();
     }
 
+    @Bean
+    public SecureRandom secureRandom() throws NoSuchAlgorithmException {
+        return SecureRandom.getInstance("SHA1PRNG");
+    }
+
+    @Bean
+    public TicketGrantingService createTicketGrantingService(SecureRandom secureRandom, HashFunction hashFunction) {
+        return new TicketGrantingService(secureRandom, hashFunction);
+    }
 }
