@@ -9,6 +9,7 @@ import application.users.UserService;
 import application.users.dto.UserDto;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,9 +21,10 @@ import shared.BulletinBoardInterface;
 
 import static shared.utils.DefaultObjectMapper.mapToObject;
 
+@Disabled
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(classes = {SecurityServiceConfig.class, RemoteProxyConfig.class})
-class MessageServiceTest {
+class ITMessageServiceTest {
 
     @Autowired
     SecurityService securityService;

@@ -21,7 +21,7 @@ public class KeyStorage {
         KeyStore.SecretKeyEntry secretKeyEntry = new KeyStore.SecretKeyEntry(key);
         KeyStore.PasswordProtection passwordProtection = new KeyStore.PasswordProtection("".toCharArray());
 
-        try (FileOutputStream fileOutputStream = new FileOutputStream(KeyStoreUtil.pathname + keyName)) {
+        try (FileOutputStream fileOutputStream = new FileOutputStream(KeyStoreUtil.pathname)) {
             keyStore.setEntry(keyName, secretKeyEntry, passwordProtection);
             keyStore.store(fileOutputStream, password);
         } catch (Exception e) {

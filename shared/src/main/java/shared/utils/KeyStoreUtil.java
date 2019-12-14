@@ -8,7 +8,7 @@ import java.security.KeyStoreException;
 
 public class KeyStoreUtil {
 
-    public static final String pathname = "";
+    public static final String pathname = "userKeyStore.jceks";
 
     public static KeyStore getKeyStore(String keystoreName) {
         File file = new File(pathname + keystoreName);

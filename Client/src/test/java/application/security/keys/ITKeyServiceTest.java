@@ -1,5 +1,6 @@
 package application.security.keys;
 
+import org.junit.jupiter.api.Disabled;
 import shared.utils.KeyStoreUtil;
 import infrastructure.security.KeyStorage;
 import org.junit.jupiter.api.Assertions;
@@ -9,7 +10,7 @@ import org.junit.jupiter.api.Test;
 import javax.crypto.SecretKey;
 import java.security.KeyStore;
 
-class KeyServiceTest {
+class ITKeyServiceTest {
 
     private KeyStore keyStore;
     private KeyService keyService;
@@ -20,6 +21,7 @@ class KeyServiceTest {
         keyService = new KeyService(new KeyStorage(keyStore));
     }
 
+    @Disabled
     @Test
     void verifyKeyPersistance() {
         SecretKey key1 = keyService.generateAndPersistKey("test");
@@ -28,6 +30,7 @@ class KeyServiceTest {
         Assertions.assertEquals(key1, key2);
     }
 
+    @Disabled
     @Test
     void addKey() {
         SecretKey key = keyService.generateAndPersistKey("key");
