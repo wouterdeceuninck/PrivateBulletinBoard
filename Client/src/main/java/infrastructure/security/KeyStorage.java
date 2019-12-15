@@ -33,7 +33,7 @@ public class KeyStorage {
         try {
             return (SecretKey) getKeyFromStore(keyName);
         } catch (Exception e) {
-            throw new NoKeyFoundException("Failed to get the requested key");
+            throw new NoKeyFoundException("Failed to get the requested key " + keyName);
         }
     }
 

@@ -36,7 +36,7 @@ public class TicketGrantingService {
         long solution = Long.parseLong(solvedTicket.getSolution());
 
         long sum = Long.sum(puzzle, solution);
-        return hashFunction.hashString(Long.toString(sum)).endsWith("000000");
+        return hashFunction.hashString(Long.toString(sum)).endsWith("00000");
     }
 
     private String getNewRandom() {

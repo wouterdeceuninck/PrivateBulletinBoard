@@ -10,8 +10,10 @@ import application.users.UserService;
 import application.users.dto.UserDto;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.springframework.beans.factory.ObjectFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
@@ -21,6 +23,7 @@ import shared.BulletinBoardInterface;
 
 import static shared.utils.DefaultObjectMapper.mapToObject;
 
+@Disabled
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(classes = {BeanConfig.class, RemoteProxyConfig.class})
 class ITMessageServiceTest {
@@ -38,7 +41,7 @@ class ITMessageServiceTest {
     KeyService keyService;
 
     @Autowired
-    BulletinBoardInterface bulletinBoardInterface;
+    ObjectFactory<BulletinBoardInterface> bulletinBoardInterface;
 
     @Autowired
     TicketSolver ticketSolver;

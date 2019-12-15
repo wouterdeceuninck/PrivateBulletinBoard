@@ -3,8 +3,11 @@ package application.users;
 import application.exceptions.CorruptedUserState;
 import application.exceptions.NoSuchUserException;
 import application.users.dto.UserDto;
+import presentation.ui.controller.startup.UserInfos;
 import shared.HashFunction;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 public class UserService {
@@ -55,5 +58,17 @@ public class UserService {
 
     private boolean verifyHash(UserDto userDto) {
         return hashFunction.hashString(userDto.toString()).equals(userDto.getHashedValue());
+    }
+
+    public void addUsers(UserInfos userInfos) {
+        userInfos.getUserInfoListSend()
+                .forEach(userInfo -> updateSendUser(userInfo.getName(), new UserDto(userInfo.getName(), userInfo.getCell(), userInfo.getTag())));
+
+        userInfos.getUserInfoListReceive()
+                .forEach(userInfo -> updateReceiveUser(userInfo.getName(), new UserDto(userInfo.getName(), userInfo.getCell(), userInfo.getTag())));
+    }
+
+    public List<String> getUsers() {
+        return new ArrayList<>(sendMap.keySet());
     }
 }

@@ -13,7 +13,9 @@ public class TicketSolver {
     }
 
     public TicketSolution solveTicket(Ticket ticket) {
+        long start = System.currentTimeMillis();
         Long solution = solve(ticket);
+        System.out.println("Time spent solving puzzle: " + (System.currentTimeMillis() - start));
         return new TicketSolution(ticket, Long.toString(solution));
     }
 
@@ -30,6 +32,6 @@ public class TicketSolver {
     private boolean calculatePossibleSolution(long puzzleLong, long index) {
         long sum = Long.sum(puzzleLong, index);
         String s = hashFunction.hashString(Long.toString(sum));
-        return s.endsWith("000000");
+        return s.endsWith("00000");
     }
 }

@@ -1,6 +1,7 @@
 package presentation.config;
 
 
+import application.messaging.MessageService;
 import application.messaging.forward.SecureGenerator;
 import application.messaging.requests.RequestService;
 import application.security.SecurityService;
@@ -8,14 +9,20 @@ import application.security.encryption.EncryptionService;
 import application.security.forward.ForwardKeyGenerator;
 import application.security.keys.KeyService;
 import application.security.ticket.TicketSolver;
-import shared.utils.KeyStoreUtil;
 import application.users.UserService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import infrastructure.security.KeyStorage;
+import org.springframework.beans.factory.ObjectFactory;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Scope;
+import presentation.ui.controller.startup.StartupService;
+import shared.BulletinBoardInterface;
 import shared.HashFunction;
 import shared.HashFunctionImpl;
+import shared.utils.KeyStoreUtil;
 
 import java.security.KeyStore;
 import java.security.MessageDigest;
@@ -28,6 +35,9 @@ import java.util.Random;
 public class BeanConfig {
 
     private String keystoreName = "userKeyStore.jceks";
+
+    @Value("${amount.of.users}")
+    public int amountOfUsers;
 
     private String cipherName = "AES";
     @Bean
@@ -48,6 +58,7 @@ public class BeanConfig {
     }
 
     @Bean
+    @Scope(scopeName = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
     SecurityService securityService(KeyService keyService,
                                     EncryptionService encryptionService,
                                     HashFunction hashFunction,
@@ -66,6 +77,7 @@ public class BeanConfig {
     }
 
     @Bean
+    @Scope(scopeName = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
     UserService userService(HashFunction hashFunction) {
         return new UserService(new HashMap<>(), new HashMap<>(), hashFunction);
     }
@@ -83,5 +95,20 @@ public class BeanConfig {
     @Bean
     TicketSolver createTicketSolver(HashFunction hashFunction) {
         return new TicketSolver(hashFunction);
+    }
+
+    @Bean
+    StartupService createStartupService(SecureGenerator secureGenerator) {
+        return new StartupService(secureGenerator, amountOfUsers);
+    }
+
+    @Bean
+    @Scope(scopeName = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
+    MessageService messageService(ObjectFactory<BulletinBoardInterface> bulletinBoardInterface,
+                                  RequestService requestService,
+                                  SecurityService securityService,
+                                  UserService userService,
+                                  TicketSolver ticketSolver) {
+        return new MessageService(bulletinBoardInterface, requestService, securityService, userService, ticketSolver);
     }
 }

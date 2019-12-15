@@ -11,7 +11,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import presentation.config.BeanConfig;
 
-
+@Disabled
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(classes = BeanConfig.class)
 class ITRequestServiceTest {

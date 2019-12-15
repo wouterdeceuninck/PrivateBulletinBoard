@@ -26,7 +26,7 @@ public class KeyService {
         return keyStorage.getSecretKey(keyName);
     }
 
-    private SecretKey generateSecretKey() {
+    public SecretKey generateSecretKey() {
         try {
             KeyGenerator keyGen = KeyGenerator.getInstance(algorithm);
             keyGen.init(keysize);
