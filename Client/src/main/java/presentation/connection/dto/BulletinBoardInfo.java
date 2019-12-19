@@ -23,7 +23,7 @@ public class BulletinBoardInfo {
     }
 
     private boolean containsCell(BulletinBoardInfoDto bulletinBoardInfoDto, int cell) {
-        return bulletinBoardInfoDto.getStart() <= cell && bulletinBoardInfoDto.getEnd() >= cell;
+        return bulletinBoardInfoDto.getStart() <= cell && bulletinBoardInfoDto.getEnd() > cell;
     }
 
     public void updateInfo(List<BulletinBoardInfoDto> bulletinBoardInfoDto) {

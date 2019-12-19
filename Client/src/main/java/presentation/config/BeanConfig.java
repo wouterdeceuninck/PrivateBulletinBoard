@@ -85,7 +85,7 @@ public class BeanConfig {
     }
 
     @Bean
-    @Scope
+    @Scope(scopeName = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
     RemoteBulletinBoard remoteBulletinBoard() {
         return new RemoteBulletinBoard();
     }
