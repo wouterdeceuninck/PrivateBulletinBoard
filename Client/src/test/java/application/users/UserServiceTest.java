@@ -4,7 +4,7 @@ import application.exceptions.NoSuchUserException;
 import application.users.dto.UserDto;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-import shared.HashFunctionImpl;
+import shared.security.HashFunctionImpl;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;

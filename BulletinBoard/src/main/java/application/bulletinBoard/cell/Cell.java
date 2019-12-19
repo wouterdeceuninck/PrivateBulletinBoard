@@ -1,21 +1,16 @@
 package application.bulletinBoard.cell;
 
-import shared.HashFunction;
-
 import java.util.HashMap;
 import java.util.Map;
 
 public class Cell {
-    private final HashFunction hashFunction;
     private final Map<String, String> messages;
 
-    public Cell(HashFunction hashFunction) {
+    public Cell() {
         messages = new HashMap<>();
-        this.hashFunction = hashFunction;
     }
 
-    public String getMessage(String key) {
-        String hashedKey = hashFunction.hashString(key);
+    public String getMessage(String hashedKey) {
         String message = messages.remove(hashedKey);
         return message == null ? "" : message;
     }

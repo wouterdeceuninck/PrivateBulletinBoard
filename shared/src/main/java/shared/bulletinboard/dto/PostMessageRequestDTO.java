@@ -1,4 +1,4 @@
-package shared;
+package shared.bulletinboard.dto;
 
 import shared.ticket.TicketSolution;
 

@@ -1,7 +1,6 @@
 package presentation.ui.controller;
 
 import application.messaging.MessageService;
-import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -13,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.net.URL;
+import java.util.AbstractMap.SimpleEntry;
 import java.util.List;
 import java.util.ResourceBundle;
 import java.util.concurrent.Executors;
@@ -33,11 +33,19 @@ public class MessagingInterfaceController implements Initializable {
 
     private ListView<String> namesList;
     private String selectedUser;
-    private ObservableList namesListData = FXCollections.observableArrayList();
+    private ObservableList<String> namesListData = FXCollections.observableArrayList();
 
     MessageService messageService;
     private List<String> names;
     private final ScheduledExecutorService scheduledExecutorService;
+    private String userName;
+
+    @Override
+    public void initialize(URL url, ResourceBundle resourceBundle) {
+        namesList = new ListView<>();
+        configureListView();
+        reloadNames();
+    }
 
     @Autowired
     public MessagingInterfaceController(MessageService messageService) {
@@ -46,32 +54,29 @@ public class MessagingInterfaceController implements Initializable {
         scheduledExecutorService.scheduleAtFixedRate(this::updateMessages, 1000, 3000, TimeUnit.MILLISECONDS);
     }
 
-    private void updateMessages() {
-        if (selectedUser != null) {
-            String message = messageService.getMessage(selectedUser);
-            if (!message.equals("")) {
-                messageBoard.appendText("\n" + selectedUser + ": " + message);
-            }
-        }
-    }
-
     @FXML
     public void sendMessage() {
         if (selectedUser != null && !enterArea.getText().equals("")) {
-            Platform.runLater(() -> {
-                String text = enterArea.getText();
-                enterArea.clear();
-                messageService.sendMessage(text, selectedUser);
-            });
+            String text = enterArea.getText();
+            enterArea.clear();
+            appendToMessageBoard(text, this.userName);
+            new Thread(() -> messageService.sendMessage(text, selectedUser)).start();
         }
-        //new Thread(() -> messageService.sendMessage("message", selectedUser)).start();
     }
 
-    @FXML
-    public void initialize() {
-        namesList = new ListView<>();
-        configureListView();
-        reloadNames();
+    private void updateMessages() {
+        names.stream()
+                .map(name -> new SimpleEntry<>(name, messageService.getMessage(name)))
+                .filter(entry -> !entry.getValue().equals(""))
+                .forEach(this::addMessagesToLocalCache);
+    }
+
+    private void appendToMessageBoard(String selectedUsersMessage, String selectedUser) {
+        messageBoard.appendText("\n" + selectedUser + ": " + selectedUsersMessage);
+    }
+
+    private void addMessagesToLocalCache(SimpleEntry<String, String> entry) {
+        appendToMessageBoard(entry.getValue(), entry.getKey());
     }
 
     private void reloadNames() {
@@ -90,12 +95,12 @@ public class MessagingInterfaceController implements Initializable {
                 (observable, oldValue, newValue) -> selectedUser = String.valueOf(newValue));
         namesList.setEditable(false);
         namesListPane.getChildren().add(namesList);
+        namesList.getSelectionModel().selectFirst();
         namesList.prefWidthProperty().bind(namesListPane.widthProperty());
         namesList.prefHeightProperty().bind(namesListPane.heightProperty());
     }
 
-    @Override
-    public void initialize(URL url, ResourceBundle resourceBundle) {
-        this.initialize();
+    public void setUserName(String name) {
+        this.userName = name;
     }
 }

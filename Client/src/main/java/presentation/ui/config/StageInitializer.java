@@ -41,7 +41,9 @@ public class StageInitializer implements ApplicationListener<StageReadyEvent> {
             messageService.addUsers(userInfos);
             Stage stage = new Stage();
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/MessagingInterface.fxml"));
-            fxmlLoader.setController(new MessagingInterfaceController(messageService));
+            MessagingInterfaceController messagingInterfaceController = new MessagingInterfaceController(messageService);
+            messagingInterfaceController.setUserName(userInfos.getName());
+            fxmlLoader.setController(messagingInterfaceController);
             Parent root1 = fxmlLoader.load();
             stage.setTitle("Messaging interface " + userInfos.getName());
             stage.setScene(new Scene(root1));

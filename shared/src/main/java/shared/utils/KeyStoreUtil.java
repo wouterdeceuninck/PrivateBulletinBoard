@@ -11,7 +11,8 @@ public class KeyStoreUtil {
     public static final String pathname = "userKeyStore.jceks";
 
     public static KeyStore getKeyStore(String keystoreName) {
-        File file = new File(pathname + keystoreName);
+        String name = keystoreName.equals("") ? "" : (keystoreName + "_") + KeyStoreUtil.pathname;
+        File file = new File(name);
         KeyStore keyStore = getJceksInstance();
         if (file.exists()) {
             loadFile(file, keyStore);

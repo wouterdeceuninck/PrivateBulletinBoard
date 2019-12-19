@@ -1,12 +1,17 @@
 package presentation.adapters;
 
 import application.bulletinBoard.BulletinBoard;
+import application.bulletinBoard.ExceptionHandlingBulletinBoard;
 import application.security.ticket.TicketGrantingService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import shared.BulletinBoardInterface;
-import shared.GetMessageRequestDTO;
-import shared.PostMessageRequestDTO;
+import shared.bulletinboard.BulletinBoardInfoDto;
+import shared.bulletinboard.BulletinBoardInterface;
+import shared.bulletinboard.dto.GetMessageRequestDTO;
+import shared.bulletinboard.dto.PostMessageRequestDTO;
+import shared.security.HashFunction;
+
+import java.util.List;
 
 import static shared.utils.DefaultObjectMapper.mapToObject;
 import static shared.utils.DefaultObjectMapper.mapToString;
@@ -15,11 +20,12 @@ public class BulletinBoardController implements BulletinBoardInterface {
 
     private final BulletinBoard bulletinBoard;
     private final TicketGrantingService ticketGrantingService;
-    private final Logger logger = LoggerFactory.getLogger(BulletinBoardController.class);
+    private final List<BulletinBoardInfoDto> infoDtoList;
 
-    public BulletinBoardController(BulletinBoard bulletinBoard, TicketGrantingService ticketGrantingService) {
-        this.bulletinBoard = bulletinBoard;
+    public BulletinBoardController(TicketGrantingService ticketGrantingService, BulletinBoardInfoDto bulletinBoardInfo, HashFunction hashFunction, List<BulletinBoardInfoDto> infoDtoList) {
+        this.bulletinBoard = new ExceptionHandlingBulletinBoard(bulletinBoardInfo.getStart(), bulletinBoardInfo.getEnd(), hashFunction);
         this.ticketGrantingService = ticketGrantingService;
+        this.infoDtoList = infoDtoList;
     }
 
     @Override
@@ -42,5 +48,10 @@ public class BulletinBoardController implements BulletinBoardInterface {
     @Override
     public String getTicket() {
         return mapToString(ticketGrantingService.createTicket());
+    }
+
+    @Override
+    public String getBulletinBoardInfo() {
+        return mapToString(infoDtoList.toArray());
     }
 }

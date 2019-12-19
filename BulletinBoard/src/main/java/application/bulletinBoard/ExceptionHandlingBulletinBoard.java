@@ -3,13 +3,13 @@ package application.bulletinBoard;
 import application.exceptions.NoSuchCellException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import shared.HashFunction;
+import shared.security.HashFunction;
 
 public class ExceptionHandlingBulletinBoard extends BulletinBoard {
     private final Logger logger = LoggerFactory.getLogger(ExceptionHandlingBulletinBoard.class);
 
-    public ExceptionHandlingBulletinBoard(int amount, HashFunction hashFunction) {
-        super(amount, hashFunction);
+    public ExceptionHandlingBulletinBoard(int start, int end, HashFunction hashFunction) {
+        super(start, end, hashFunction);
     }
 
     @Override

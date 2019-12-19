@@ -1,6 +1,6 @@
 package application.security.ticket;
 
-import shared.HashFunction;
+import shared.security.HashFunction;
 import shared.ticket.Ticket;
 import shared.ticket.TicketSolution;
 

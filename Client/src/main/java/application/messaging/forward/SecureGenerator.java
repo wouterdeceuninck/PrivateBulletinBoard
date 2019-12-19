@@ -9,7 +9,7 @@ import java.security.SecureRandom;
 
 public class SecureGenerator {
 
-    private final int cell_size = 16;
+    private final int cell_size = 40;
     private final SecureRandom secureRandom;
     private final ForwardKeyGenerator forwardKeyGenerator;
 

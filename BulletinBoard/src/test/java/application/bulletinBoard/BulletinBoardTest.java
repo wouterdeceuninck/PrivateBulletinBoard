@@ -4,7 +4,7 @@ import application.exceptions.NoSuchCellException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import shared.HashFunctionImpl;
+import shared.security.HashFunctionImpl;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -17,7 +17,7 @@ class BulletinBoardTest {
     @BeforeEach
     void setUp() throws NoSuchAlgorithmException {
         hashFunction = new HashFunctionImpl(MessageDigest.getInstance("sha-256"));
-        bulletinBoard = new BulletinBoard(5, hashFunction);
+        bulletinBoard = new BulletinBoard(0, 4, hashFunction);
     }
 
     @Test
@@ -36,11 +36,17 @@ class BulletinBoardTest {
     void putAMessageInACell_retrievePostedMessage() {
         String tag = "tag";
         String value = "value";
-        String hashedTag = hashFunction.hashString(tag);
 
-        bulletinBoard.add(1 , hashedTag, value);
+        bulletinBoard.add(1 , tag, value);
         String receivedMessage = bulletinBoard.get(1, tag);
 
         Assertions.assertEquals(value, receivedMessage);
+    }
+
+    @Test
+    void name() {
+        bulletinBoard.add(1, hashFunction.hashString("tag"), "message");
+        String message = bulletinBoard.get(1, "tag");
+        Assertions.assertEquals("message", message);
     }
 }

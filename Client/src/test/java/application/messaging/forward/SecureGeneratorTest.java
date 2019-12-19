@@ -17,7 +17,7 @@ class SecureGeneratorTest {
         int index = secureGenerator.generateCellIndex();
 
         Assertions.assertTrue(index >= 0);
-        Assertions.assertTrue(index <= 15);
+        Assertions.assertTrue(index <= 39);
     }
 
     @Test

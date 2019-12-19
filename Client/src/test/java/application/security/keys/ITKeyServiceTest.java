@@ -17,7 +17,7 @@ class ITKeyServiceTest {
 
     @BeforeEach
     void setUp() {
-        keyStore = KeyStoreUtil.getKeyStore("userKeyStore.jceks");
+        keyStore = KeyStoreUtil.getKeyStore("");
         keyService = new KeyService(new KeyStorage(keyStore));
     }
 

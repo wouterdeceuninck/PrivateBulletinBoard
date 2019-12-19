@@ -4,7 +4,7 @@ import application.exceptions.CorruptedUserState;
 import application.exceptions.NoSuchUserException;
 import application.users.dto.UserDto;
 import presentation.ui.controller.startup.UserInfos;
-import shared.HashFunction;
+import shared.security.HashFunction;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -1,16 +1,15 @@
 package application.messaging;
 
+import application.exceptions.FailedToSolveTicketException;
 import application.messaging.requests.ForwardMessage;
-import application.messaging.requests.RequestService;
 import application.security.SecurityService;
 import application.security.ticket.TicketSolver;
 import application.users.UserService;
 import application.users.dto.UserDto;
-import org.springframework.beans.factory.ObjectFactory;
+import presentation.connection.RemoteBulletinBoard;
 import presentation.ui.controller.startup.UserInfos;
-import shared.BulletinBoardInterface;
-import shared.GetMessageRequestDTO;
-import shared.PostMessageRequestDTO;
+import shared.bulletinboard.dto.GetMessageRequestDTO;
+import shared.bulletinboard.dto.PostMessageRequestDTO;
 import shared.ticket.Ticket;
 import shared.ticket.TicketSolution;
 
@@ -21,21 +20,16 @@ import static shared.utils.DefaultObjectMapper.mapToString;
 
 public class MessageService {
     private final SecurityService securityService;
-    private final BulletinBoardInterface bulletinBoardSend;
-    private final BulletinBoardInterface bulletinBoardReceive;
-    private final RequestService requestService;
     private final UserService userService;
     private final TicketSolver ticketSolver;
+    private final RemoteBulletinBoard remoteBulletinBoard;
 
-    public MessageService(ObjectFactory<BulletinBoardInterface> bulletinBoard,
-                   RequestService requestService,
-                   SecurityService securityService,
-                   UserService userService,
-                   TicketSolver ticketSolver) {
-        this.bulletinBoardSend = bulletinBoard.getObject();
-        this.bulletinBoardReceive = bulletinBoard.getObject();
+    public MessageService(RemoteBulletinBoard remoteBulletinBoard,
+                          SecurityService securityService,
+                          UserService userService,
+                          TicketSolver ticketSolver) {
+        this.remoteBulletinBoard = remoteBulletinBoard;
         this.securityService = securityService;
-        this.requestService = requestService;
         this.userService = userService;
         this.ticketSolver = ticketSolver;
     }
@@ -66,21 +60,30 @@ public class MessageService {
     }
 
     private void postMessageToBulletinBoard(String message, int nextCellIndex, String nextTag, UserDto sendUser) {
-        PostMessageRequestDTO postRequest = requestService.createPostRequest(sendUser, message, nextCellIndex, nextTag);
-        Ticket ticket = mapToObject(Ticket.class, requestTicket());
+        PostMessageRequestDTO postRequest = createPostMessageRequestDTO(message, nextCellIndex, nextTag, sendUser);
+        Ticket ticket = mapToObject(Ticket.class, requestTicket(postRequest));
         TicketSolution solution = ticketSolver.solveTicket(ticket);
         postRequest.setSolution(solution);
 
-        bulletinBoardSend.postMessage(mapToString(postRequest));
+        boolean isSuccess = remoteBulletinBoard.postMessage(postRequest);
+        if (!isSuccess) throw new FailedToSolveTicketException();
     }
 
-    private String requestTicket() {
-        return bulletinBoardSend.getTicket();
+    private PostMessageRequestDTO createPostMessageRequestDTO(String message, int nextCellIndex, String nextTag, UserDto sendUser) {
+        String forwardMessage = mapToString(new ForwardMessage(nextCellIndex, nextTag, message));
+        String hashTag = securityService.hashString(sendUser.getTag());
+        String encryptMessage = securityService.encryptMessage(forwardMessage, sendUser.getKeyName());
+
+        return new PostMessageRequestDTO(sendUser.getCell(), hashTag, encryptMessage);
+    }
+
+    private String requestTicket(PostMessageRequestDTO postRequest) {
+        return remoteBulletinBoard.getTicket(postRequest);
     }
 
     private String getMessageFromBulletinBoard(UserDto receiveUser) {
-        GetMessageRequestDTO getRequest = requestService.createGetRequest(receiveUser);
-        return bulletinBoardReceive.getMessage(mapToString(getRequest));
+        GetMessageRequestDTO getRequest = new GetMessageRequestDTO(receiveUser.getCell(), receiveUser.getTag());
+        return remoteBulletinBoard.getMessage(getRequest);
     }
 
     private void updateSenderState(String receiver, int nextCellIndex, String nextTag, UserDto sendUser) {

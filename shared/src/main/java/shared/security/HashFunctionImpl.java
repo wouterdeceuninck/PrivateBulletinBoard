@@ -1,4 +1,4 @@
-package shared;
+package shared.security;
 
 import org.apache.commons.codec.binary.Hex;
 

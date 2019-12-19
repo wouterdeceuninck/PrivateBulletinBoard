@@ -1,4 +1,4 @@
-package shared;
+package shared.bulletinboard.dto;
 
 public class GetMessageRequestDTO {
     private int cell;

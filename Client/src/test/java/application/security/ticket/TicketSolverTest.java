@@ -2,7 +2,7 @@ package application.security.ticket;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-import shared.HashFunctionImpl;
+import shared.security.HashFunctionImpl;
 import shared.ticket.Ticket;
 import shared.ticket.TicketSolution;
 

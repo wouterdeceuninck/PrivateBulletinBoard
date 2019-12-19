@@ -1,32 +1,45 @@
 package presentation.config;
 
-import application.bulletinBoard.ExceptionHandlingBulletinBoard;
 import application.security.ticket.TicketGrantingService;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
+import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.remoting.rmi.RmiServiceExporter;
-import presentation.adapters.BulletinBoardController;
-import shared.BulletinBoardInterface;
-import shared.HashFunction;
+import shared.bulletinboard.BulletinBoardInfoDto;
+import shared.security.HashFunction;
 
-@Configuration
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
+
 public class RemoteConfig {
 
-    private int boardSize = 20;
+    private final int amountOfServers;
+    private final int registryPort;
+    private final int sizeOfBoard;
 
-    @Bean
-    public BulletinBoardController createBulletinController(HashFunction hashFunction, TicketGrantingService ticketGrantingService) {
-        return new BulletinBoardController(new ExceptionHandlingBulletinBoard(boardSize, hashFunction), ticketGrantingService);
+    public RemoteConfig(TicketGrantingService service,
+                        HashFunction hashFunction,
+                        ObjectProvider<RmiServiceExporter> objectProvider,
+                        int amountOfServers,
+                        int registryPort,
+                        int sizeOfBoard) {
+        this.amountOfServers = amountOfServers;
+        this.registryPort = registryPort;
+        this.sizeOfBoard = sizeOfBoard;
+
+        createInstances(objectProvider, service, hashFunction);
     }
 
-    @Bean
-    RmiServiceExporter createBulletinBoardExporter(BulletinBoardController implementation) {
-        Class<BulletinBoardInterface> serviceInterface = BulletinBoardInterface.class;
-        RmiServiceExporter exporter = new RmiServiceExporter();
-        exporter.setServiceInterface(serviceInterface);
-        exporter.setService(implementation);
-        exporter.setServiceName("BulletinBoardService");
-        exporter.setRegistryPort(1099);
-        return exporter;
+    public void createInstances(ObjectProvider<RmiServiceExporter> objectProvider, TicketGrantingService service, HashFunction hashFunction) {
+        List<BulletinBoardInfoDto> infoDtoList = createInfoDtoList();
+        for (BulletinBoardInfoDto infoDto : infoDtoList) {
+            objectProvider.getObject(service, hashFunction, infoDto, infoDtoList);
+        }
     }
+
+    private List<BulletinBoardInfoDto> createInfoDtoList() {
+        return IntStream.range(0, amountOfServers)
+                .mapToObj(counter -> new BulletinBoardInfoDto(registryPort + counter, sizeOfBoard * counter, sizeOfBoard * (counter + 1), "BulletinBoardService"))
+                .collect(Collectors.toList());
+    }
+
 }

@@ -3,9 +3,10 @@ package application.security.ticket;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import shared.HashFunctionImpl;
+import shared.security.HashFunctionImpl;
 import shared.ticket.Ticket;
 import shared.ticket.TicketSolution;
+import shared.utils.DefaultObjectMapper;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -29,6 +30,7 @@ class TicketGrantingServiceTest {
 
         System.out.println(ticket.getTimeStamp());
         System.out.println(ticket.getPuzzle());
+        System.out.println(DefaultObjectMapper.mapToString(ticket));
     }
 
     @Test

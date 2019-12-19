@@ -1,25 +1,25 @@
 package application.messaging;
 
 import application.messaging.requests.ForwardMessage;
-import application.messaging.requests.RequestService;
 import application.security.SecurityService;
 import application.security.keys.KeyService;
 import application.security.ticket.TicketSolver;
 import application.security.utils.DefaultKeyEncoder;
 import application.users.UserService;
 import application.users.dto.UserDto;
+import presentation.connection.RemoteBulletinBoard;
+import infrastructure.security.KeyStorage;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.springframework.beans.factory.ObjectFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import presentation.config.RemoteProxyConfig;
 import presentation.config.BeanConfig;
-import shared.BulletinBoardInterface;
+import shared.utils.KeyStoreUtil;
 
 import static shared.utils.DefaultObjectMapper.mapToObject;
 
@@ -32,16 +32,12 @@ class ITMessageServiceTest {
     SecurityService securityService;
 
     @Autowired
-    RequestService requestService;
-
-    @Autowired
     UserService userService;
 
-    @Autowired
     KeyService keyService;
 
     @Autowired
-    ObjectFactory<BulletinBoardInterface> bulletinBoardInterface;
+    RemoteBulletinBoard remoteBulletinBoard;
 
     @Autowired
     TicketSolver ticketSolver;
@@ -50,7 +46,8 @@ class ITMessageServiceTest {
 
     @BeforeEach
     void setUp() {
-        messageService = new MessageService(bulletinBoardInterface, requestService, securityService, userService, ticketSolver);
+        keyService = new KeyService(new KeyStorage(KeyStoreUtil.getKeyStore("")));
+        messageService = new MessageService(remoteBulletinBoard, securityService, userService, ticketSolver);
     }
 
     @Test

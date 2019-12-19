@@ -2,7 +2,7 @@ package application.bulletinBoard;
 
 import application.bulletinBoard.cell.Cell;
 import application.exceptions.NoSuchCellException;
-import shared.HashFunction;
+import shared.security.HashFunction;
 
 import java.util.AbstractMap.SimpleEntry;
 import java.util.Map;
@@ -12,16 +12,25 @@ import java.util.stream.Collectors;
 import static java.util.stream.IntStream.range;
 
 public class BulletinBoard {
-    private final Map<Integer, Cell> cellCollection;
+    private Map<Integer, Cell> cellCollection;
+    private final HashFunction hashFunction;
 
     BulletinBoard(int amount, HashFunction hashFunction) {
         cellCollection = range(0, amount)
-                .mapToObj(iter -> createCellEntry(iter, hashFunction))
+                .mapToObj(this::createCellEntry)
+                .collect(Collectors.toMap(Entry::getKey, Entry::getValue));
+        this.hashFunction = hashFunction;
+    }
+
+    public BulletinBoard(int start, int end, HashFunction hashFunction) {
+        this.hashFunction = hashFunction;
+        cellCollection = range(start, end + 1)
+                .mapToObj(this::createCellEntry)
                 .collect(Collectors.toMap(Entry::getKey, Entry::getValue));
     }
 
-    private SimpleEntry<Integer, Cell> createCellEntry(int cellNumber, HashFunction hashFunction) {
-        return new SimpleEntry<>(cellNumber, new Cell(hashFunction));
+    private SimpleEntry<Integer, Cell> createCellEntry(int cellNumber) {
+        return new SimpleEntry<>(cellNumber, new Cell());
     }
 
     public void add(int cell, String tag, String value) {
@@ -31,7 +40,7 @@ public class BulletinBoard {
 
     public String get(int cell, String tag) {
         Cell selectedCell = getSelectedCell(cell);
-        return selectedCell.getMessage(tag);
+        return selectedCell.getMessage(hashFunction.hashString(tag));
     }
 
     private Cell getSelectedCell(int cell) {

@@ -10,7 +10,7 @@ import java.security.KeyStore;
 
 class KeyStorageTest {
 
-    private KeyStore keyStore = KeyStoreUtil.getKeyStore("userKeyStore.jceks");
+    private KeyStore keyStore = KeyStoreUtil.getKeyStore("");
     private KeyStorage keyStorage = new KeyStorage(keyStore);
 
     @Test

@@ -1,4 +1,4 @@
-package shared;
+package shared.bulletinboard;
 
 public interface BulletinBoardInterface {
 
@@ -7,4 +7,6 @@ public interface BulletinBoardInterface {
     boolean postMessage(String request);
 
     String getTicket();
+
+    String getBulletinBoardInfo();
 }
