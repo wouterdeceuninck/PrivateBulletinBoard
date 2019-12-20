@@ -41,5 +41,4 @@ public class RemoteConfig {
                 .mapToObj(counter -> new BulletinBoardInfoDto(registryPort + counter, sizeOfBoard * counter, sizeOfBoard * (counter + 1), "BulletinBoardService"))
                 .collect(Collectors.toList());
     }
-
 }

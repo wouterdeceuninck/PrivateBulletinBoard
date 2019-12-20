@@ -19,7 +19,7 @@ public class BulletinBoardInfo {
                 .filter(bulletinBoardInfoDto -> containsCell(bulletinBoardInfoDto, cell))
                 .findAny()
                 .map(BulletinBoardInfoDto::getLocation)
-                .orElseThrow(NoBulletinBoardFoundForCellException::new);
+                .orElseThrow(() -> new NoBulletinBoardFoundForCellException("cell not found! " + cell));
     }
 
     private boolean containsCell(BulletinBoardInfoDto bulletinBoardInfoDto, int cell) {
